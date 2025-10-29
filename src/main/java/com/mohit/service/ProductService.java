@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.mohit.dto.ProductRequestDto;
+import com.mohit.dto.ProductResponseDto;
 import com.mohit.models.Product;
 
 @Service
@@ -15,5 +16,6 @@ public interface ProductService {
 	public List<ProductRequestDto>getALLProducts();
 	public ProductRequestDto getProductById(Integer id);
 	public Boolean deleteProduct(Integer id);
+	public ProductResponseDto getProductsWithPagiantion(int pageNo, int pageSize , String sortBy,String sortDir );
 	
 }

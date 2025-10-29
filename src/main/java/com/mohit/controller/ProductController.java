@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.mohit.ProductManagemetSystemApplication;
 import com.mohit.dto.ProductRequestDto;
+import com.mohit.dto.ProductResponseDto;
 import com.mohit.models.Product;
 import com.mohit.service.ProductService;
 
@@ -29,8 +31,9 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/products")
 public class ProductController {
 
-    //private final ProductManagemetSystemApplication productManagemetSystemApplication;
-	
+	// private final ProductManagemetSystemApplication
+	// productManagemetSystemApplication;
+
 	private final ProductService productService;
 //
 //    ProductController(ProductManagemetSystemApplication productManagemetSystemApplication) {
@@ -64,43 +67,53 @@ public class ProductController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		return new ResponseEntity<>(products ,HttpStatus.OK);
+		return new ResponseEntity<>(products, HttpStatus.OK);
 
 	}
-	
+
 	@GetMapping("/product/{id}")
-	public ResponseEntity<?> getProductId(@PathVariable(name ="id") Integer id){
-		
+	public ResponseEntity<?> getProductId(@PathVariable(name = "id") Integer id) {
+
 		ProductRequestDto product = null;
 		try {
-	   product =productService.getProductById(id);
-	   if(ObjectUtils.isEmpty(product))
-	   {
-		   return new ResponseEntity<>("Product with" + id  +"Not found" ,HttpStatus.NO_CONTENT);
-	   }
-	   	
-	}
-		catch(Exception e)
-		{
+			product = productService.getProductById(id);
+			if (ObjectUtils.isEmpty(product)) {
+				return new ResponseEntity<>("Product with" + id + "Not found", HttpStatus.NO_CONTENT);
+			}
+
+		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
-		return new ResponseEntity<>(product ,HttpStatus.OK);
+
+		return new ResponseEntity<>(product, HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping("/product/{id}")
-	public ResponseEntity<?>deleteProduct(@PathVariable(name="id") Integer id)
-	{
+	public ResponseEntity<?> deleteProduct(@PathVariable(name = "id") Integer id) {
 		Boolean deletedProduct = null;
 		try {
-			deletedProduct =productService.deleteProduct(id);
-		}
-		catch (Exception e)
-		{
+			deletedProduct = productService.deleteProduct(id);
+		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<>("Delete Success",HttpStatus.OK);
+		return new ResponseEntity<>("Delete Success", HttpStatus.OK);
 	}
-	
+
+	@GetMapping("/pagination")
+	public ResponseEntity<?> getPaginatedProducts(@RequestParam int pageNo, @RequestParam int pageSize) {
+		ProductResponseDto productsWithPagiantion = null;
+		try {
+
+			productsWithPagiantion = productService.getProductsWithPagiantion(pageNo, pageSize, null, null);
+			if (ObjectUtils.isEmpty(productsWithPagiantion)) {
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+		return new ResponseEntity<>(productsWithPagiantion, HttpStatus.OK);
+
+	}
 
 }
