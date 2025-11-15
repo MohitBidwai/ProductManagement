@@ -23,6 +23,7 @@ import com.mohit.dto.ProductResponseDto;
 import com.mohit.models.Product;
 import com.mohit.service.ProductService;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
@@ -41,7 +42,7 @@ public class ProductController {
 //    }
 
 	@PostMapping("/save")
-	public ResponseEntity<?> saveProduct(@RequestBody ProductRequestDto productDto) {
+	public ResponseEntity<?> saveProduct(@RequestBody @Valid ProductRequestDto productDto) {
 		try {
 			Boolean savedProduct = productService.saveProduct(productDto);
 			if (!savedProduct) {
